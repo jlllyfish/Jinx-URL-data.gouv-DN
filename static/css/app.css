@@ -26,9 +26,7 @@
   cursor: pointer;
   font-size: 0.875rem;
   background: var(--background-default-grey);
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s;
   overflow: hidden;
 }
 
@@ -66,7 +64,7 @@
   display: grid;
   grid-template-columns: 1fr 140px 1fr auto;
   gap: 0.5rem;
-  align-items: flex-start; /* Aligne sur le haut pour gérer le bloc hint sous la valeur */
+  align-items: center;
   margin-bottom: 0.75rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-default-grey);
@@ -77,24 +75,16 @@
   margin-bottom: 0;
 }
 
-/* Harmonisation des champs de saisie */
 .filter-row .fr-select,
 .filter-row .fr-input {
   margin-bottom: 0;
   height: 2.5rem;
   min-height: 2.5rem;
   max-height: 2.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
   box-sizing: border-box;
-  padding: 0 0.75rem;
-  line-height: normal;
-}
-
-/* Alignement vertical du bloc de boutons */
-.filter-row > div:last-child {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 2.5rem; /* Aligné sur la hauteur des inputs */
+  line-height: 2.5rem;
 }
 
 .btn-remove-filter {
@@ -107,7 +97,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0 !important; /* Suppression du décalage */
+  margin-bottom: 0.25rem;
 }
 
 .btn-remove-filter:hover {
@@ -125,20 +115,10 @@
   border-left: 4px solid var(--border-active-blue-france);
 }
 
-.url-highlight .part-base {
-  color: var(--text-mention-grey);
-}
-.url-highlight .part-search {
-  color: var(--text-default-info);
-  font-weight: 500;
-}
-.url-highlight .part-placeholder {
-  color: var(--text-default-success);
-  font-weight: 700;
-}
-.url-highlight .part-filter {
-  color: var(--text-default-warning);
-}
+.url-highlight .part-base { color: var(--text-mention-grey); }
+.url-highlight .part-search { color: var(--text-default-info); font-weight: 500; }
+.url-highlight .part-placeholder { color: var(--text-default-success); font-weight: 700; }
+.url-highlight .part-filter { color: var(--text-default-warning); }
 
 .url-result {
   font-family: var(--font-family-mono, monospace);
@@ -146,6 +126,7 @@
   resize: vertical;
 }
 
+/* Hints valeurs fréquentes sous un filtre */
 .filter-values-hint {
   min-height: 0;
 }
@@ -184,7 +165,113 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 /* Footer */
 .fr-footer {
-  padding-bottom: 2rem;
+  margin-top: 4rem;
+}
+
+/* ── Mode JSON ─────────────────────────────── */
+
+.api-mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.api-mode-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-default-grey);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.api-mode-option:hover {
+  border-color: var(--border-active-blue-france);
+  background: var(--background-alt-blue-france);
+}
+
+.api-mode-option.selected {
+  border-color: var(--border-active-blue-france);
+  background: var(--background-contrast-blue-france);
+}
+
+.api-mode-icon {
+  font-size: 1.5rem;
+  color: var(--text-action-high-blue-france);
+  flex-shrink: 0;
+}
+
+.api-mode-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-default-grey);
+}
+
+.api-mode-option.selected .api-mode-title {
+  color: var(--text-active-blue-france);
+}
+
+.api-mode-desc {
+  font-size: 0.8125rem;
+  color: var(--text-mention-grey);
+  margin-top: 2px;
+}
+
+/* Liste de résultats de recherche */
+.json-results-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 0.5px solid var(--border-default-grey);
+  border-radius: 0.25rem;
+}
+
+.json-result-item {
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  border-bottom: 0.5px solid var(--border-default-grey);
+  transition: background 0.1s;
+}
+
+.json-result-item:last-child { border-bottom: none; }
+
+.json-result-item:hover {
+  background: var(--background-alt-blue-france);
+}
+
+/* Liste de datasets */
+.json-dataset-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  border: 0.5px solid var(--border-default-grey);
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.json-dataset-item:hover {
+  background: var(--background-alt-blue-france);
+  border-color: var(--border-active-blue-france);
+}
+
+.json-dataset-item.selected {
+  background: var(--background-contrast-blue-france);
+  border-color: var(--border-active-blue-france);
+}
+
+.json-dataset-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-default-grey);
+}
+
+.json-dataset-meta {
+  font-size: 0.75rem;
+  color: var(--text-mention-grey);
+  margin-top: 2px;
 }
