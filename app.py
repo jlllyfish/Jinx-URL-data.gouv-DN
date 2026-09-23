@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, jsonify
 import requests
 from urllib.parse import urlparse
@@ -20,6 +21,14 @@ def tabular_error(r):
     if r.status_code == 429:
         return jsonify({"error": "Trop de requêtes vers l'API tabulaire, réessayez dans un instant."}), 429
     return None
+
+
+@app.context_processor
+def asset_version():
+    """Version des fichiers statiques (mtime max) pour forcer le rechargement après déploiement."""
+    static_dir = os.path.join(app.root_path, "static")
+    mtimes = [os.path.getmtime(os.path.join(r, f)) for r, _, fs in os.walk(static_dir) for f in fs]
+    return {"asset_v": int(max(mtimes)) if mtimes else 0}
 
 
 @app.route("/")
