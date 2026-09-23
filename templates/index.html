@@ -38,7 +38,7 @@
       <div class="fr-col-12 fr-col-md-8 fr-col-offset-md-2">
 
         <!-- Sélecteur de mode API -->
-        <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+        <div class="panel-box fr-p-4w fr-mb-4w">
           <h3 class="fr-h5 fr-mb-2w">Type d'API à configurer</h3>
           <div class="api-mode-selector">
             <div class="api-mode-option selected" id="tile-csv" onclick="switchApiMode('csv')" tabindex="0"
@@ -54,14 +54,14 @@
               <div class="api-mode-icon fr-icon-code-s-slash-line" aria-hidden="true"></div>
               <div>
                 <div class="api-mode-title">API JSON (métadonnées)</div>
-                <div class="api-mode-desc">Recherche d'organisations et de datasets via les APIs data.gouv.fr et transport.data.gouv.fr.</div>
+                <div class="api-mode-desc">Jeux de données ou réutilisations data.gouv.fr, jeux transport.data.gouv.fr — recherche et filtres.</div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- ══ MODE CSV (existant) ══ -->
-        <div id="mode-csv" class="mode-panel">
+        <div id="mode-csv" class="mode-panel mode-panel--active">
 
         <!-- Indicateur d'étape simple (sans JS DSFR) -->
         <div class="step-indicator fr-mb-4w">
@@ -74,7 +74,7 @@
 
         <!-- Panel étape 1 -->
         <div id="panel-step1" class="step-panel">
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">URL du dataset ou identifiant de ressource (rid)</h3>
             <div class="fr-input-group" id="input-group-url">
               <label class="fr-label" for="dataset-input">
@@ -101,34 +101,26 @@
 
         <!-- Panel étape 2 -->
         <div id="panel-step2" class="step-panel fr-hidden">
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">Colonne de recherche</h3>
             <p class="fr-text--sm fr-text--mention">La colonne sur laquelle l'usager va taper dans le formulaire.</p>
 
-            <div class="fr-mb-3w">
-              <div class="fr-tabs">
-                <ul class="fr-tabs__list" role="tablist">
-                  <li role="presentation">
-                    <button class="fr-tabs__tab fr-tabs__tab--icon-left fr-icon-search-line" id="tab-contains" tabindex="0"
-                      role="tab" aria-selected="true" aria-controls="tab-contains-panel">
-                      Autosuggestion (contains)
-                    </button>
-                  </li>
-                  <li role="presentation">
-                    <button class="fr-tabs__tab fr-tabs__tab--icon-left fr-icon-equalizer-line" id="tab-exact" tabindex="-1"
-                      role="tab" aria-selected="false" aria-controls="tab-exact-panel">
-                      Correspondance exacte
-                    </button>
-                  </li>
-                </ul>
-                <div id="tab-contains-panel" class="fr-tabs__panel fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tab-contains">
-                  <p class="fr-text--sm">L'usager tape les premières lettres et voit les résultats correspondants (commune, nom d'établissement…).</p>
+            <fieldset class="fr-segmented fr-segmented--sm fr-mb-1w">
+              <legend class="fr-segmented__legend">Mode de recherche</legend>
+              <div class="fr-segmented__elements">
+                <div class="fr-segmented__element">
+                  <input type="radio" id="mode-contains" name="search-mode" value="contains" checked
+                    onchange="UI.setSearchMode(this.value)" />
+                  <label class="fr-label fr-icon-search-line" for="mode-contains">Autosuggestion (contains)</label>
                 </div>
-                <div id="tab-exact-panel" class="fr-tabs__panel" role="tabpanel" aria-labelledby="tab-exact">
-                  <p class="fr-text--sm">L'usager saisit un identifiant précis (code UAI, SIRET…). Le système vérifie que cet identifiant existe.</p>
+                <div class="fr-segmented__element">
+                  <input type="radio" id="mode-exact" name="search-mode" value="exact"
+                    onchange="UI.setSearchMode(this.value)" />
+                  <label class="fr-label fr-icon-equalizer-line" for="mode-exact">Correspondance exacte</label>
                 </div>
               </div>
-            </div>
+            </fieldset>
+            <p class="fr-text--sm fr-mb-3w" id="search-mode-hint">L'usager tape les premières lettres et voit les résultats correspondants (commune, nom d'établissement…).</p>
 
             <!-- Recherche dans les colonnes -->
             <div class="fr-input-group fr-mb-2w">
@@ -140,13 +132,13 @@
           </div>
 
           <!-- Aperçu des données -->
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">Aperçu des données <span class="fr-badge fr-badge--sm fr-badge--grey">5 premières lignes</span></h3>
             <div id="preview-container"><p class="fr-text--sm fr-text--mention">Chargement…</p></div>
           </div>
 
           <!-- Filtres fixes -->
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">Filtres fixes <span class="fr-badge fr-badge--info fr-badge--sm">Optionnel</span></h3>
             <p class="fr-text--sm fr-text--mention">Restreignez les résultats à un sous-ensemble de la base (ex : seulement un type d'établissement, une région…). Cliquez sur la loupe pour voir les valeurs fréquentes d'une colonne.</p>
             <div id="filters-container"></div>
@@ -156,7 +148,7 @@
           </div>
 
           <!-- Test de la requête -->
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">Tester la requête</h3>
             <p class="fr-text--sm fr-text--mention">Vérifiez que votre configuration retourne bien les bons résultats avant de copier l'URL.</p>
             <div class="fr-input-group">
@@ -178,7 +170,7 @@
 
         <!-- Panel étape 3 : résultat -->
         <div id="panel-step3" class="step-panel fr-hidden">
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">URL générée</h3>
             <p class="fr-text--sm fr-text--mention">Copiez cette URL et collez-la dans le champ <strong>Référentiel avancé à configurer</strong> de demarches-simplifiees.fr.</p>
 
@@ -204,7 +196,7 @@
           </div>
 
           <!-- Récapitulatif de la configuration -->
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
+          <div class="panel-box fr-p-4w fr-mb-4w">
             <h3 class="fr-h5">Récapitulatif de la configuration</h3>
             <div id="config-summary"></div>
           </div>
@@ -232,84 +224,130 @@
         <!-- ══ MODE JSON ══ -->
         <div id="mode-json" class="mode-panel">
 
-          <!-- Choix profil détenteur / utilisateur -->
-          <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
-            <h3 class="fr-h5">Profil déclarant</h3>
-            <div class="fr-radios-group">
-              <div class="fr-radio-group">
-                <input type="radio" id="radio-detenteur" name="json-profil" value="detenteur" checked
-                  onchange="UrlBuilderJson.setMode('detenteur')" />
-                <label class="fr-label" for="radio-detenteur">
-                  Détenteur de données
-                  <span class="fr-hint-text">Je publie des jeux de données sur data.gouv.fr ou transport.data.gouv.fr</span>
+          <div class="step-indicator fr-mb-4w">
+            <span class="step-indicator__state">Étape <span id="j-step-current">1</span> sur 3 —</span>
+            <span id="j-step-title" class="step-indicator__title">Choisir l'API</span>
+            <div class="step-indicator__bar">
+              <div class="step-indicator__progress" id="j-step-progress"></div>
+            </div>
+          </div>
+
+          <!-- Étape 1 JSON : API -->
+          <div id="j-panel-step1" class="step-panel">
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">API à interroger</h3>
+              <div id="j-source-list" class="api-mode-selector"></div>
+
+              <div class="fr-input-group fr-mt-3w">
+                <label class="fr-label" for="j-url-input">
+                  Ou collez une URL d'API existante (optionnel)
+                  <span class="fr-hint-text">Ses paramètres (organization, tag, format…) seront repris comme filtres.</span>
                 </label>
+                <input class="fr-input" type="text" id="j-url-input"
+                  placeholder="https://www.data.gouv.fr/api/1/datasets/?organization=…"
+                  onkeydown="if(event.key==='Enter')JsonUI.next1()" />
               </div>
-              <div class="fr-radio-group">
-                <input type="radio" id="radio-utilisateur" name="json-profil" value="utilisateur"
-                  onchange="UrlBuilderJson.setMode('utilisateur')" />
-                <label class="fr-label" for="radio-utilisateur">
-                  Utilisateur de données
-                  <span class="fr-hint-text">J'utilise des jeux de données dans une réutilisation déclarée sur data.gouv.fr</span>
-                </label>
+              <div id="j-step1-status"></div>
+              <div class="fr-mt-3w">
+                <button class="fr-btn" onclick="JsonUI.next1()">Continuer</button>
               </div>
             </div>
           </div>
 
-          <!-- Source (détenteur seulement) -->
-          <div id="json-source-selector" class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
-            <h3 class="fr-h5">Source des données</h3>
-            <div class="fr-radios-group">
-              <div class="fr-radio-group">
-                <input type="radio" id="radio-transport" name="json-source" value="transport" checked
-                  onchange="UrlBuilderJson.setSource('transport')" />
-                <label class="fr-label" for="radio-transport">
-                  transport.data.gouv.fr
-                  <span class="fr-hint-text">Recommandé — données de mobilité, pas besoin de filtre format supplémentaire</span>
-                </label>
+          <!-- Étape 2 JSON : recherche + filtres -->
+          <div id="j-panel-step2" class="step-panel fr-hidden">
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">Paramètre de recherche</h3>
+              <p class="fr-text--sm fr-text--mention">Là où sera injectée la saisie de l'usager (<code>{id}</code>).</p>
+              <div id="j-source-note"></div>
+
+              <fieldset class="fr-segmented fr-segmented--sm fr-mb-2w">
+                <legend class="fr-segmented__legend">Mode de recherche</legend>
+                <div class="fr-segmented__elements">
+                  <div class="fr-segmented__element">
+                    <input type="radio" id="j-mode-contains" name="j-search-mode" value="contains" checked
+                      onchange="JsonUI.setMode(this.value)" />
+                    <label class="fr-label fr-icon-search-line" for="j-mode-contains">Autosuggestion</label>
+                  </div>
+                  <div class="fr-segmented__element">
+                    <input type="radio" id="j-mode-exact" name="j-search-mode" value="exact"
+                      onchange="JsonUI.setMode(this.value)" />
+                    <label class="fr-label fr-icon-equalizer-line" for="j-mode-exact">Correspondance exacte</label>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div id="j-search-list" class="col-grid"></div>
+              <div id="j-step2-alert"></div>
+            </div>
+
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">Aperçu des données <span class="fr-badge fr-badge--sm fr-badge--grey">5 premiers</span></h3>
+              <div id="j-preview-container"></div>
+            </div>
+
+            <div class="panel-box fr-p-4w" id="j-filters-card">
+              <h3 class="fr-h5">Filtres fixes <span class="fr-badge fr-badge--info fr-badge--sm">Optionnel</span></h3>
+              <p class="fr-text--sm fr-text--mention">Ces API ne gèrent que l'égalité stricte, combinée en ET. Tapez quelques lettres dans « Valeur » puis cliquez sur la loupe pour retrouver un identifiant (organisation, zone…).</p>
+              <div id="j-filters-container"></div>
+              <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mt-2w" id="j-btn-add-filter" onclick="JsonUI.addFilter()">
+                Ajouter un filtre
+              </button>
+            </div>
+
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">Tester la requête</h3>
+              <div class="fr-input-group">
+                <label class="fr-label" for="j-test-value">Valeur de test (remplacera <code>{id}</code>)</label>
+                <input class="fr-input" type="text" id="j-test-value" placeholder="Ex : enseignement agricole, 5f9747d729655b5365f0cf19…"
+                  onkeydown="if(event.key==='Enter')JsonUI.runTest()" />
               </div>
-              <div class="fr-radio-group">
-                <input type="radio" id="radio-datagouv" name="json-source" value="datagouv"
-                  onchange="UrlBuilderJson.setSource('datagouv')" />
-                <label class="fr-label" for="radio-datagouv">
-                  data.gouv.fr
-                  <span class="fr-hint-text">Tous types de données publiques</span>
-                </label>
-              </div>
+              <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-play-circle-line fr-mt-2w" onclick="JsonUI.runTest()">
+                Lancer le test
+              </button>
+              <div id="j-test-results" class="fr-mt-2w"></div>
+            </div>
+
+            <div class="fr-btns-group fr-btns-group--inline">
+              <button class="fr-btn fr-btn--secondary" onclick="JsonUI.goStep(1)">Retour</button>
+              <button class="fr-btn" onclick="JsonUI.goStep(3)">Générer l'URL</button>
             </div>
           </div>
 
-          <!-- Étape 1 JSON : recherche org / réutilisation -->
-          <div class="json-step fr-card fr-card--shadow fr-p-4w fr-mb-4w">
-            <h3 class="fr-h5">Étape 1 — <span id="json-step1-label">Identifier l'organisation</span></h3>
-            <div id="json-step1-content"></div>
-          </div>
-
-          <!-- Étape 2 JSON : sélection dataset -->
-          <div class="json-step fr-card fr-card--shadow fr-p-4w fr-mb-4w fr-hidden">
-            <h3 class="fr-h5">Étape 2 — Sélectionner un jeu de données</h3>
-            <div class="fr-input-group fr-mb-2w">
-              <label class="fr-label" for="json-dataset-search">Filtrer les jeux de données</label>
-              <input class="fr-input" type="search" id="json-dataset-search"
-                placeholder="Rechercher dans la liste…"
-                oninput="UrlBuilderJson.loadOrgDatasets(this.value)" />
+          <!-- Étape 3 JSON : résultat -->
+          <div id="j-panel-step3" class="step-panel fr-hidden">
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">URL générée</h3>
+              <p class="fr-text--sm fr-text--mention">À coller dans le champ <strong>Référentiel avancé à configurer</strong> de Démarche numérique.</p>
+              <div class="fr-input-group fr-mt-2w">
+                <label class="fr-label" for="j-result-url">URL avec placeholder <code>{id}</code></label>
+                <textarea class="fr-input url-result" id="j-result-url" rows="3" readonly></textarea>
+              </div>
+              <div id="j-url-highlight" class="url-highlight fr-mt-2w fr-p-2w"></div>
+              <div class="fr-btns-group fr-btns-group--inline fr-mt-3w">
+                <button class="fr-btn fr-btn--icon-left fr-icon-clipboard-line" onclick="JsonUI.copyUrl()">Copier l'URL</button>
+                <button class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-external-link-line" onclick="JsonUI.testInBrowser()">Tester dans le navigateur</button>
+              </div>
+              <div id="j-copy-alert" class="fr-alert fr-alert--success fr-alert--sm fr-mt-2w fr-hidden">
+                <p>URL copiée dans le presse-papiers.</p>
+              </div>
             </div>
-            <div id="json-datasets-list"></div>
-          </div>
 
-          <!-- Étape 3 JSON : métadonnées + URLs -->
-          <div class="json-step fr-card fr-card--shadow fr-p-4w fr-mb-4w fr-hidden">
-            <h3 class="fr-h5">Étape 3 — Métadonnées et URLs DN</h3>
-            <div id="json-meta-container" class="fr-mb-3w"></div>
-            <hr class="fr-hr" />
-            <h4 class="fr-h6 fr-mt-3w">URLs à configurer dans DN</h4>
-            <div id="json-url-result"></div>
-            <hr class="fr-hr fr-mt-3w" />
-            <h4 class="fr-h6 fr-mt-3w">Mapping DN suggéré</h4>
-            <div id="json-dn-mapping"></div>
-          </div>
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">Récapitulatif de la configuration</h3>
+              <div id="j-config-summary"></div>
+            </div>
 
-          <div class="fr-btns-group fr-btns-group--inline fr-mt-2w">
-            <button class="fr-btn fr-btn--tertiary" onclick="switchApiMode('json')">Recommencer</button>
+            <div class="panel-box fr-p-4w">
+              <h3 class="fr-h5">Champs disponibles pour le mapping DN</h3>
+              <p class="fr-text--sm fr-text--mention">Issus du dernier test. Les tableaux ne peuvent pas être affichés à l'usager, seulement mappés sur des répétitions.</p>
+              <div id="j-dn-mapping"></div>
+            </div>
+
+            <div class="fr-btns-group fr-btns-group--inline">
+              <button class="fr-btn fr-btn--secondary" onclick="JsonUI.goStep(2)">Modifier</button>
+              <button class="fr-btn fr-btn--tertiary" onclick="JsonUI.reset()">Recommencer</button>
+            </div>
           </div>
 
         </div> <!-- /mode-json -->
@@ -350,16 +388,9 @@ function switchApiMode(mode) {
   document.getElementById('mode-' + mode).classList.add('mode-panel--active');
   document.getElementById('tile-csv').classList.toggle('selected', mode === 'csv');
   document.getElementById('tile-json').classList.toggle('selected', mode === 'json');
-  if (mode === 'json') {
-    UrlBuilderJson.setMode(
-      document.querySelector('input[name="json-profil"]:checked')?.value || 'detenteur'
-    );
-    UrlBuilderJson.renderStep1();
-  }
+  if (mode === 'json') JsonUI.init();
 }
 
-// Init immédiat
-document.querySelectorAll('.mode-panel').forEach(el => el.classList.remove('mode-panel--active'));
 </script>
 </body>
 </html>
