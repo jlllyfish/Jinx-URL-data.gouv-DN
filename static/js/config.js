@@ -89,10 +89,12 @@ const Config = (() => {
         </div>
       </dl>
       <p class="fr-text--sm fr-text--mention fr-mb-1w">Filtres fixes</p>
-      <table class="fr-table fr-table--sm" style="display:table;width:100%;">
-        <thead><tr><th>Colonne</th><th>Opérateur</th><th>Valeur</th></tr></thead>
-        <tbody>${filterRows}</tbody>
-      </table>`;
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>Colonne</th><th>Opérateur</th><th>Valeur</th></tr></thead>
+          <tbody>${filterRows}</tbody>
+        </table>
+      </div>`;
   }
 
   function esc(str) {

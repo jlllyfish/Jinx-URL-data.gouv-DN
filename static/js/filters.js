@@ -117,13 +117,13 @@ const Filters = (() => {
                <div id="filter-values-${i}" class="filter-values-hint fr-mt-1w"></div>`
           }
         </div>
-        <div>
+        <div class="filter-actions">
           ${
             !noValue
               ? `<button class="fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-only fr-icon-search-line"
             title="Valeurs fréquentes" onclick="Filters._showValues(${i})"
             aria-label="Valeurs fréquentes"></button>`
-              : '<span style="width:32px;"></span>'
+              : ''
           }
           <button class="btn-remove-filter fr-icon-delete-line" title="Supprimer"
             onclick="Filters._remove(${i})" aria-label="Supprimer le filtre ${i + 1}">

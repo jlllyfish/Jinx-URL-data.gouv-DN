@@ -14,7 +14,7 @@ const UI = (() => {
       return;
     }
     currentStep = n;
-    document.querySelectorAll('.step-panel').forEach(p => p.classList.add('fr-hidden'));
+    document.querySelectorAll('#mode-csv .step-panel').forEach(p => p.classList.add('fr-hidden'));
     document.getElementById(`panel-step${n}`).classList.remove('fr-hidden');
 
     const titles = ['Identifier la ressource', 'Configurer la recherche', 'URL générée'];
@@ -159,13 +159,18 @@ const UI = (() => {
     UrlBuilder.setSearchCol(col);
   }
 
-  // --- Onglets mode (contains / exact) ---
+  // --- Mode de recherche (contains / exact) ---
 
-  document.addEventListener('dsfr.tabChange', (e) => {
-    const id = e.target?.id;
-    if (id === 'tab-contains') UrlBuilder.setMode('contains');
-    if (id === 'tab-exact') UrlBuilder.setMode('exact');
-  });
+  const MODE_HINTS = {
+    contains: "L'usager tape les premières lettres et voit les résultats correspondants (commune, nom d'établissement…).",
+    exact: "L'usager saisit un identifiant précis (code UAI, SIRET…). Le système vérifie que cet identifiant existe.",
+  };
+
+  function setSearchMode(mode) {
+    UrlBuilder.setMode(mode);
+    const hint = document.getElementById('search-mode-hint');
+    if (hint) hint.textContent = MODE_HINTS[mode] || '';
+  }
 
   // --- Test de l'URL ---
 
@@ -215,6 +220,9 @@ const UI = (() => {
     Filters.reset();
     UrlBuilder.setRid('');
     UrlBuilder.setSearchCol('');
+    const radioContains = document.getElementById('mode-contains');
+    if (radioContains) radioContains.checked = true;
+    setSearchMode('contains');
     document.getElementById('dataset-input').value = '';
     document.getElementById('step1-status').innerHTML = '';
     document.getElementById('resource-selector').classList.add('fr-hidden');
@@ -241,7 +249,7 @@ const UI = (() => {
     if (!el) {
       el = document.createElement('div');
       el.id = id;
-      document.getElementById('panel-step2').querySelector('.fr-card')?.appendChild(el);
+      document.getElementById('panel-step2').querySelector('.panel-box')?.appendChild(el);
     }
     el.innerHTML = `<div class="fr-alert fr-alert--${type} fr-alert--sm fr-mt-2w"><p>${esc(msg)}</p></div>`;
     setTimeout(() => el.innerHTML = '', 4000);
@@ -267,7 +275,7 @@ const UI = (() => {
   return {
     goStep, loadDataset, copyUrl, testUrl, reset,
     filterCols, runTest, exportJson, exportYaml,
-    _selectCol, _onResourceSelect,
+    setSearchMode, _selectCol, _onResourceSelect,
   };
 })();
 
@@ -282,5 +290,3 @@ function runTest() { UI.runTest(); }
 function exportJson() { UI.exportJson(); }
 function exportYaml() { UI.exportYaml(); }
 
-// Init mode API au chargement complet
-window.addEventListener('load', () => switchApiMode('csv'));

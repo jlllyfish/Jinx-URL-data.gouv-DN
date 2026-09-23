@@ -26,8 +26,8 @@ const Preview = (() => {
 
     el.innerHTML = `
       <p class="fr-text--sm fr-text--mention fr-mb-1w">${total.toLocaleString('fr-FR')} lignes au total — aperçu des 5 premières</p>
-      <div style="overflow-x:auto;">
-        <table class="fr-table fr-table--sm fr-table--bordered" style="display:table;width:100%;">
+      <div class="table-scroll">
+        <table class="data-table">
           <thead>
             <tr>${visibleCols.map(c => `<th scope="col" title="${esc(c)}">${esc(truncate(c, 18))}</th>`).join('')}
             ${cols.length > 6 ? `<th scope="col" style="color:var(--text-mention-grey)">+${cols.length - 6} col.</th>` : ''}
