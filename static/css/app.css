@@ -171,6 +171,58 @@
   margin-top: 4rem;
 }
 
+/* Indicateur d'étape simple (remplace fr-stepper) */
+.step-indicator {
+  padding-bottom: 1rem;
+}
+
+.step-indicator__state {
+  font-size: 0.875rem;
+  color: var(--text-mention-grey);
+}
+
+.step-indicator__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-default-grey);
+}
+
+.step-indicator__bar {
+  height: 4px;
+  background: var(--border-default-grey);
+  border-radius: 2px;
+  margin-top: 0.75rem;
+}
+
+.step-indicator__progress {
+  height: 100%;
+  background: var(--border-active-blue-france);
+  border-radius: 2px;
+  width: 33%;
+  transition: width 0.3s ease;
+}
+
+/* Panneaux de mode */
+.mode-panel {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+
+.mode-panel--active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  pointer-events: auto !important;
+}
+
 /* ── Mode JSON ─────────────────────────────── */
 
 .api-mode-selector {
