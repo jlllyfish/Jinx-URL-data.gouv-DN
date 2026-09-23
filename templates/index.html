@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Générateur d'URL — API data.gouv.fr × demarches-simplifiees</title>
-  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml" />
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}?v={{ asset_v }}" type="image/svg+xml" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.11.2/dist/dsfr.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.11.2/dist/utility/icons/icons.min.css" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}?v={{ asset_v }}" />
 </head>
 <body>
 
@@ -232,6 +232,8 @@
             </div>
           </div>
 
+          <div id="j-endpoint" class="endpoint-bar fr-mb-3w fr-hidden" aria-live="polite"></div>
+
           <!-- Étape 1 JSON : API -->
           <div id="j-panel-step1" class="step-panel">
             <div class="panel-box fr-p-4w">
@@ -257,8 +259,8 @@
           <!-- Étape 2 JSON : recherche + filtres -->
           <div id="j-panel-step2" class="step-panel fr-hidden">
             <div class="panel-box fr-p-4w">
-              <h3 class="fr-h5">Paramètre de recherche</h3>
-              <p class="fr-text--sm fr-text--mention">Là où sera injectée la saisie de l'usager (<code>{id}</code>).</p>
+              <h3 class="fr-h5">Colonne clé saisie par l'usager</h3>
+              <p class="fr-text--sm fr-text--mention">Choisissez le mode, puis le champ de la réponse sur lequel porte la saisie (<code>{id}</code>). Seuls les champs que l'API sait interroger dans ce mode sont sélectionnables.</p>
               <div id="j-source-note"></div>
 
               <fieldset class="fr-segmented fr-segmented--sm fr-mb-2w">
@@ -278,6 +280,7 @@
               </fieldset>
 
               <div id="j-search-list" class="col-grid"></div>
+              <div id="j-search-url"></div>
               <div id="j-step2-alert"></div>
             </div>
 
@@ -310,6 +313,7 @@
 
             <div class="fr-btns-group fr-btns-group--inline">
               <button class="fr-btn fr-btn--secondary" onclick="JsonUI.goStep(1)">Retour</button>
+              <button class="fr-btn fr-btn--tertiary fr-icon-refresh-line fr-btn--icon-left" onclick="JsonUI.reset()">Réinitialiser</button>
               <button class="fr-btn" onclick="JsonUI.goStep(3)">Générer l'URL</button>
             </div>
           </div>
@@ -346,7 +350,7 @@
 
             <div class="fr-btns-group fr-btns-group--inline">
               <button class="fr-btn fr-btn--secondary" onclick="JsonUI.goStep(2)">Modifier</button>
-              <button class="fr-btn fr-btn--tertiary" onclick="JsonUI.reset()">Recommencer</button>
+              <button class="fr-btn fr-btn--tertiary fr-icon-refresh-line fr-btn--icon-left" onclick="JsonUI.reset()">Recommencer</button>
             </div>
           </div>
 
@@ -374,13 +378,13 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.11.2/dist/dsfr.module.min.js" type="module"></script>
-<script src="{{ url_for('static', filename='js/api.js') }}"></script>
-<script src="{{ url_for('static', filename='js/filters.js') }}"></script>
-<script src="{{ url_for('static', filename='js/url-builder.js') }}"></script>
-<script src="{{ url_for('static', filename='js/url-builder-json.js') }}"></script>
-<script src="{{ url_for('static', filename='js/preview.js') }}"></script>
-<script src="{{ url_for('static', filename='js/config.js') }}"></script>
-<script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}?v={{ asset_v }}"></script>
+<script src="{{ url_for('static', filename='js/filters.js') }}?v={{ asset_v }}"></script>
+<script src="{{ url_for('static', filename='js/url-builder.js') }}?v={{ asset_v }}"></script>
+<script src="{{ url_for('static', filename='js/url-builder-json.js') }}?v={{ asset_v }}"></script>
+<script src="{{ url_for('static', filename='js/preview.js') }}?v={{ asset_v }}"></script>
+<script src="{{ url_for('static', filename='js/config.js') }}?v={{ asset_v }}"></script>
+<script src="{{ url_for('static', filename='js/ui.js') }}?v={{ asset_v }}"></script>
 <script>
 // Switcher de mode API
 function switchApiMode(mode) {
