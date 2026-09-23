@@ -61,15 +61,15 @@
         </div>
 
         <!-- ══ MODE CSV (existant) ══ -->
-        <div id="mode-csv" class="fr-hidden">
+        <div id="mode-csv" class="mode-panel">
 
-        <!-- Étape 1 -->
-        <div class="fr-stepper fr-mb-4w">
-          <h2 class="fr-stepper__title">
-            <span class="fr-stepper__state">Étape <span id="step-current">1</span> sur 3</span>
-            <span id="step-title">Identifier la ressource</span>
-          </h2>
-          <div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3"></div>
+        <!-- Indicateur d'étape simple (sans JS DSFR) -->
+        <div class="step-indicator fr-mb-4w">
+          <span class="step-indicator__state">Étape <span id="step-current">1</span> sur 3 —</span>
+          <span id="step-title" class="step-indicator__title">Identifier la ressource</span>
+          <div class="step-indicator__bar">
+            <div class="step-indicator__progress" id="step-progress"></div>
+          </div>
         </div>
 
         <!-- Panel étape 1 -->
@@ -230,7 +230,7 @@
         </div> <!-- /mode-csv -->
 
         <!-- ══ MODE JSON ══ -->
-        <div id="mode-json" class="fr-hidden">
+        <div id="mode-json" class="mode-panel">
 
           <!-- Choix profil détenteur / utilisateur -->
           <div class="fr-card fr-card--shadow fr-p-4w fr-mb-4w">
@@ -346,8 +346,8 @@
 <script>
 // Switcher de mode API
 function switchApiMode(mode) {
-  document.getElementById('mode-csv').classList.toggle('fr-hidden', mode !== 'csv');
-  document.getElementById('mode-json').classList.toggle('fr-hidden', mode !== 'json');
+  document.querySelectorAll('.mode-panel').forEach(el => el.classList.remove('mode-panel--active'));
+  document.getElementById('mode-' + mode).classList.add('mode-panel--active');
   document.getElementById('tile-csv').classList.toggle('selected', mode === 'csv');
   document.getElementById('tile-json').classList.toggle('selected', mode === 'json');
   if (mode === 'json') {
@@ -358,11 +358,8 @@ function switchApiMode(mode) {
   }
 }
 
-// Init au chargement
-document.addEventListener('DOMContentLoaded', () => {
-  switchApiMode('csv');
-  UrlBuilderJson.renderStep1();
-});
+// Init immédiat
+document.querySelectorAll('.mode-panel').forEach(el => el.classList.remove('mode-panel--active'));
 </script>
 </body>
 </html>
