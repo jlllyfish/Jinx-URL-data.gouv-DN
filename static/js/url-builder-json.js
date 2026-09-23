@@ -94,6 +94,7 @@ const JsonUI = (() => {
     sample: [],          // enregistrements d'aperçu
     filters: [],         // [{param, val}]
     lastTest: null,      // dernière réponse JSON de test
+    previewUrl: '',      // URL réellement interrogée pour l'aperçu
   };
 
   // ── Étape 1 : source ─────────────────────────────────────
@@ -269,7 +270,25 @@ const JsonUI = (() => {
     renderResultHint();
   }
 
+  function renderEndpoint() {
+    const el = document.getElementById('j-endpoint');
+    if (!el) return;
+    if (state.step === 1) { el.classList.add('fr-hidden'); return; }
+    el.classList.remove('fr-hidden');
+    const url = buildUrl();
+    const row = (label, content) =>
+      `<div class="endpoint-bar__row"><span class="endpoint-bar__label">${label}</span>${content}</div>`;
+    const link = (u) => `<a class="endpoint-bar__url" href="${esc(u)}" target="_blank" rel="noopener" title="Ouvrir dans un nouvel onglet">${esc(u)}</a>`;
+    el.innerHTML =
+      row('API', `<strong>${esc(SOURCES[state.source].label)}</strong>`) +
+      (state.previewUrl ? row('Aperçu', link(state.previewUrl)) : '') +
+      row('URL générée', url
+        ? `<code>${esc(url)}</code>${isProxy() ? ' <span class="fr-badge fr-badge--sm fr-badge--warning">via l\'app</span>' : ''}`
+        : `<span class="fr-text--mention">${esc(planError() || 'choisissez la colonne clé')}</span>`);
+  }
+
   function renderResultHint() {
+    renderEndpoint();
     const el = document.getElementById('j-search-url');
     if (!el) return;
     const url = buildUrl();
@@ -507,6 +526,8 @@ const JsonUI = (() => {
     const src = SOURCES[state.source];
     const q = state.source === 'transport' ? [] : [...filterQuery().filter(p => !p.startsWith('page_size=')), 'page_size=5'];
     const url = src.base + (q.length ? `?${q.join('&')}` : '');
+    state.previewUrl = url;
+    renderEndpoint();
     el.innerHTML = '<p class="fr-text--sm fr-text--mention">Chargement de l\'aperçu…</p>';
     try {
       const data = await proxyFetch(url);
@@ -589,14 +610,15 @@ const JsonUI = (() => {
   function recordsTable(rows) {
     if (!rows.length) return '<p class="fr-text--sm fr-text--mention">Aucune donnée.</p>';
     const k = currentSearch() ? state.search : null;
-    const cols = k && !['title', 'id', '*'].includes(k)
-      ? [[`🔑 ${k}`, r => getField(r, k)], ...PREVIEW_COLS]
-      : PREVIEW_COLS;
+    const hasKey = k && !['title', 'id', '*'].includes(k);
+    const cols = hasKey ? [[k, r => getField(r, k)], ...PREVIEW_COLS] : PREVIEW_COLS;
+    const cls = (i) => (hasKey && i === 0 ? ' class="is-key"' : '');
     return `<div class="table-scroll"><table class="data-table">
-      <thead><tr>${cols.map(([h]) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
-      <tbody>${rows.map(r => `<tr>${cols.map(([, fn]) => {
+      <thead><tr>${cols.map(([h], i) => `<th scope="col"${cls(i)}>${i === 0 && hasKey ? '<span class="fr-icon-key-line fr-icon--sm" aria-hidden="true"></span> ' : ''}${esc(h)}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r => `<tr>${cols.map(([, fn], i) => {
         const v = String(fn(r) ?? '');
-        return `<td title="${esc(v)}">${esc(v)}</td>`;
+        const content = esc(v) || '<span class="fr-text--mention">—</span>';
+        return `<td${cls(i)} title="${esc(v)}">${i === 0 ? `<span class="cell-clamp">${content}</span>` : content}</td>`;
       }).join('')}</tr>`).join('')}</tbody>
     </table></div>`;
   }
@@ -631,6 +653,7 @@ const JsonUI = (() => {
     document.getElementById('j-step-current').textContent = n;
     document.getElementById('j-step-title').textContent = titles[n - 1];
     document.getElementById('j-step-progress').style.width = `${(n / 3) * 100}%`;
+    renderEndpoint();
     if (n === 3) renderResult();
   }
 
@@ -685,8 +708,9 @@ const JsonUI = (() => {
     state.filters = [];
     state.lastTest = null;
     state.sample = [];
+    state.previewUrl = '';
     ['j-url-input', 'j-test-value'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
-    ['j-step1-status', 'j-test-results', 'j-preview-container'].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = ''; });
+    ['j-step1-status', 'j-test-results', 'j-preview-container', 'j-search-url', 'j-filters-container'].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = ''; });
     init();
   }
 
